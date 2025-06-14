@@ -3,8 +3,7 @@ This repository contains the full implementation for the Flickd AI Hackathon. Th
 
 The final architecture evolved significantly from a simple visual search to a sophisticated, production-grade system that leverages multiple specialized AI models to overcome real-world challenges like irrelevant video frames and visual ambiguity in large product catalogs.
 
-Live Demo
-[Link to your 5-minute Loom video demo here]
+
 
 Final Architecture Overview
 Our final system is a three-script workflow designed for maximum accuracy and modularity. Each script performs a distinct, specialized task, feeding its output to the next stage.
@@ -44,32 +43,35 @@ The gcloud CLI tool installed.
 Installation:
 
 # Clone the repository
-git clone [your-repo-url]
-cd [your-repo-name]
+git clone https://github.com/Ravinder210/Flickd-Hackathon
+cd Flickd-Hackathon
 
 # Create and activate a virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
 # Install all required libraries
+
 pip install -r requirements.txt
 Authentication:
 Authenticate with Google Cloud to use the Vertex AI API. This will open a browser window for you to log in.
-
 gcloud auth application-default login
+
 2. Prepare Models & Data
 Place the provided video files in the /videos directory.
 Place product_data.xlsx, images.csv, and vibes_list.json in the /data directory.
 Download the pre-trained best.pt model from the Kaggle link provided and place it in the /models directory.
 Run the data preparation and index-building notebooks (01_... to 04b_...) or provide the final FAISS index (catalog_index_large.faiss and product_id_map_large.json) in the /models folder.
+
 (Optional but Recommended) Run the scripts/download_model.py script to pre-cache all Hugging Face models locally.
-3. Execute the Full Pipeline
+
+4. Execute the Full Pipeline
 The workflow consists of running the three main scripts in sequence for each video. The scripts are designed to find and process the outputs from the previous step.
 
 Step 1: Generate Candidates
 This script will process all videos in the /videos folder and create initial candidate JSON files in /outputs.
-
 python3 scripts/run_advanced_pipeline.py
+
 Step 2: Re-rank with Gemini Vision
 This script will process all candidate files in /outputs and create re-ranked files in /outputs_reranked.
 
