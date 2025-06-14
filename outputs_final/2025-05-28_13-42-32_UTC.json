@@ -11,55 +11,6 @@
             "match_type": "similar",
             "matched_product_id": "15339",
             "confidence": 0.5901
-        },
-        {
-            "type": "Dress",
-            "color": "#FDFDFD",
-            "match_type": "similar",
-            "matched_product_id": "17228",
-            "confidence": 0.5838
-        },
-        {
-            "type": "Dress",
-            "color": "Pink",
-            "match_type": "similar",
-            "matched_product_id": "42077",
-            "confidence": 0.5737
-        },
-        {
-            "type": "Dress",
-            "color": "Cream",
-            "match_type": "similar",
-            "matched_product_id": "42032",
-            "confidence": 0.5713
-        },
-        {
-            "type": "Dress",
-            "color": "Maroon",
-            "match_type": "similar",
-            "matched_product_id": "42036",
-            "confidence": 0.5538
-        },
-        {
-            "type": "Dress",
-            "color": "Green",
-            "match_type": "similar",
-            "matched_product_id": "42033",
-            "confidence": 0.5529
-        },
-        {
-            "type": "Dress",
-            "color": "Pink",
-            "match_type": "similar",
-            "matched_product_id": "15337",
-            "confidence": 0.549
-        },
-        {
-            "type": "Dress",
-            "color": "White",
-            "match_type": "similar",
-            "matched_product_id": "15220",
-            "confidence": 0.5446
         }
     ]
 }
