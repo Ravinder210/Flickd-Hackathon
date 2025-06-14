@@ -1,0 +1,17 @@
+{
+    "video_id": "2025-06-02_11-31-19_UTC",
+    "vibes": [
+        "Boho",
+        "Party Glam",
+        "Cottagecore"
+    ],
+    "products": [
+        {
+            "type": "Dress",
+            "color": "Dark Blue",
+            "match_type": "similar",
+            "matched_product_id": "15243",
+            "confidence": 0.5115
+        }
+    ]
+}

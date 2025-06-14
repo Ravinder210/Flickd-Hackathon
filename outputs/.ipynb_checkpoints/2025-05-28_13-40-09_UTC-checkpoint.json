@@ -1,0 +1,62 @@
+{
+    "video_id": "2025-05-28_13-40-09_UTC",
+    "vibes": [],
+    "products": [
+        {
+            "type": "Dress",
+            "color": "Brown",
+            "match_type": "similar",
+            "matched_product_id": "15019",
+            "confidence": 0.5621
+        },
+        {
+            "type": "Dress",
+            "color": "White",
+            "match_type": "similar",
+            "matched_product_id": "15196",
+            "confidence": 0.5575
+        },
+        {
+            "type": "Dress",
+            "color": "White",
+            "match_type": "similar",
+            "matched_product_id": "118441",
+            "confidence": 0.5565
+        },
+        {
+            "type": "Dress",
+            "color": "White",
+            "match_type": "similar",
+            "matched_product_id": "15697",
+            "confidence": 0.5492
+        },
+        {
+            "type": "Top",
+            "color": "Beige",
+            "match_type": "similar",
+            "matched_product_id": "15458",
+            "confidence": 0.5388
+        },
+        {
+            "type": "Dress",
+            "color": "Black And White",
+            "match_type": "similar",
+            "matched_product_id": "15675",
+            "confidence": 0.523
+        },
+        {
+            "type": "Dress",
+            "color": "Beige",
+            "match_type": "similar",
+            "matched_product_id": "16631",
+            "confidence": 0.5201
+        },
+        {
+            "type": "Dress",
+            "color": "White",
+            "match_type": "similar",
+            "matched_product_id": "15220",
+            "confidence": 0.5193
+        }
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "video_id": "2025-05-27_13-46-16_UTC",
+    "vibes": [],
+    "products": [
+        {
+            "type": "Dress",
+            "color": "Black",
+            "match_type": "similar",
+            "matched_product_id": "15378",
+            "confidence": 0.4859
+        },
+        {
+            "type": "Dress",
+            "color": "Black",
+            "match_type": "similar",
+            "matched_product_id": "15215",
+            "confidence": 0.5319
+        },
+        {
+            "type": "Top",
+            "color": "Purple",
+            "match_type": "similar",
+            "matched_product_id": "15067",
+            "confidence": 0.5164
+        },
+        {
+            "type": "Dress",
+            "color": "Blue",
+            "match_type": "similar",
+            "matched_product_id": "17268",
+            "confidence": 0.5066
+        },
+        {
+            "type": "Dress",
+            "color": "Black",
+            "match_type": "similar",
+            "matched_product_id": "42100",
+            "confidence": 0.4913
+        },
+        {
+            "type": "Dress",
+            "color": "Green",
+            "match_type": "similar",
+            "matched_product_id": "14988",
+            "confidence": 0.4867
+        },
+        {
+            "type": "Jacket",
+            "color": "nan",
+            "match_type": "similar",
+            "matched_product_id": "17073",
+            "confidence": 0.4855
+        },
+        {
+            "type": "Dress",
+            "color": "White",
+            "match_type": "similar",
+            "matched_product_id": "17289",
+            "confidence": 0.4845
+        }
+    ]
+}
