@@ -1,88 +1,208 @@
-Flickd AI Hackathon: Smart Tagging & Vibe Engine
-This repository contains the full implementation for the Flickd AI Hackathon. The project is a multi-stage, multi-modal AI pipeline designed to accurately identify fashion products from short video clips, re-rank them for maximum relevance, and classify their fashion "vibe".
+# 👗 Flickd AI Hackathon: Smart Tagging & Vibe Engine
 
-The final architecture evolved significantly from a simple visual search to a sophisticated, production-grade system that leverages multiple specialized AI models to overcome real-world challenges like irrelevant video frames and visual ambiguity in large product catalogs.
+Welcome to the **Flickd AI Hackathon** submission — a full-fledged, multi-modal AI pipeline built to **identify fashion products from short videos**, **rank them for relevance**, and **classify their fashion "vibe"**.
 
+> ⚡ What started as a simple visual search evolved into a production-grade system tackling challenges like irrelevant frames, visual ambiguity, and large catalog search — using CLIP, YOLO, BLIP, Sentence Transformers, and Google Gemini.
 
+---
 
-Final Architecture Overview
-Our final system is a three-script workflow designed for maximum accuracy and modularity. Each script performs a distinct, specialized task, feeding its output to the next stage.
+## 🏗️ Final Architecture Overview
 
+Our final system is modular, consisting of **three specialized scripts**, each performing a core function:
 
-Script 1: run_advanced_pipeline.py - The Candidate Generator
-This script's goal is to intelligently process a raw video and produce a high-quality list of the top 8-10 most plausible product matches.
+```
+🎥 Video → 🧠 Frame Filtering → 🧥 Product Detection → 🔍 Candidate Scoring → 🤖 LLM Reranking → ✨ Vibe Tagging
+```
 
-Two-Stage Frame Filtering: To handle noisy, real-world video clips (e.g., Reels), the pipeline first performs a "Body Shot" scan. It uses a fast yolov8n model to identify frames where a person's body is clearly visible (taking up >20% of the frame area), discarding irrelevant close-ups or filler scenes. This ensures that only high-quality, "shoppable" frames proceed to the next stage.
-Expert Fashion Detection: On this filtered set of frames, we use our fine-tuned best.pt fashion model to accurately detect specific clothing items (dress, top, etc.).
-Hybrid Scoring (Visual + Text): For each detected item, we generate a final score based on a weighted combination of two signals:
-Visual Similarity (40% weight): A powerful ViT-L/14 CLIP model finds visually similar items from a 7,922-item FAISS index.
-Textual Relevance (60% weight): A BLIP Image Captioning model dynamically generates a rich description of the item in the video (e.g., "a white blouse with ruffled sleeves"). This rich query is then compared against the detailed descriptions of catalog candidates using a Sentence-Transformer model.
-Output: The script produces a JSON file containing a list of the top candidate products, ranked by this robust hybrid score.
-Script 2: vertex_visual_rerank.py - The LLM Adjudicator
-This script acts as our "final expert judge" to select the single best match from the high-quality candidate list.
+---
 
-Input: Takes the candidate JSON from Script 1 and the original video.
-Best Evidence Selection: It scans the video with the best.pt model to find the single clearest, best-cropped image of the target fashion item.
-Multimodal Prompting: It presents this best image directly to the powerful Google Gemini Pro Vision model via the Vertex AI API. The prompt includes both the image and the text descriptions of the top candidates.
-Final Judgement: We ask the LLM to perform its advanced reasoning to look at the visual evidence and the text descriptions simultaneously and select the single best product_id.
-Output: It saves a new JSON file with the product list re-ranked to place the LLM's choice at the very top.
-Script 3: add_vibes.py - The Vibe Tagger
-The final script completes the required output by adding fashion "vibes".
+## 📜 Scripts Breakdown
 
-Input: Takes the re-ranked JSON from Script 2.
-Contextual Analysis: It looks at the winning product's title, description, and product_collections to create a rich text profile.
-LLM Vibe Classification: It sends this text profile to the Gemini Pro model and asks it to classify the item into 1-3 vibes from the provided vibes_list.json.
-Final Output: It updates the JSON file with the vibes array, creating the final deliverable for the hackathon.
-How to Run the Project
-1. Setup
-Prerequisites:
+### 1️⃣ `run_advanced_pipeline.py` — **Candidate Generator**
 
-Python 3.10+
-A Google Cloud account with the Vertex AI API enabled.
-The gcloud CLI tool installed.
-Installation:
+Produces a high-quality shortlist (top 8–10) of fashion products per video.
 
-# Clone the repository
+* 🧠 **Two-Stage Frame Filtering**
+
+  * **YOLOv8n** filters for "body shot" frames (body ≥ 20% frame area).
+* 👗 **Fashion Item Detection**
+
+  * Uses custom-trained `best.pt` model.
+* 🔗 **Hybrid Scoring: Visual + Text**
+
+  * **40% Visual Similarity**: CLIP (ViT-L/14) via FAISS index.
+  * **60% Textual Match**: BLIP captioning + Sentence Transformers.
+
+📦 **Output**: Ranked `candidates.json` per video in `/outputs`.
+
+---
+
+### 2️⃣ `vertex_visual_rerank.py` — **LLM Adjudicator**
+
+Re-ranks candidates to find the **best product match**.
+
+* 🖼️ **Best Frame Extraction**
+
+  * Uses `best.pt` to pick the clearest single frame.
+* 💡 **Multimodal Prompting**
+
+  * Passes frame + candidates to **Gemini Pro Vision**.
+* 🏆 **Final Judgment**
+
+  * Gemini selects the best `product_id`.
+
+📦 **Output**: Re-ranked `candidates_reranked.json` in `/outputs_reranked`.
+
+---
+
+### 3️⃣ `add_vibes.py` — **Vibe Classifier**
+
+Adds fashion “vibes” to each product.
+
+* 📚 **Contextual Understanding**
+
+  * Title, description & collections are merged into a rich text profile.
+* 🎨 **LLM-Based Vibe Tagging**
+
+  * Gemini classifies into 1–3 vibes from `vibes_list.json`.
+
+📦 **Output**: Final enriched JSONs in `/outputs_final`.
+
+---
+
+## 🚀 How to Run the Project
+
+### 🔧 1. Setup
+
+#### ✅ Prerequisites
+
+* Python 3.10+
+* Google Cloud account with Vertex AI enabled
+* `gcloud` CLI installed
+
+#### 📦 Installation
+
+```bash
 git clone https://github.com/Ravinder210/Flickd-Hackathon
 cd Flickd-Hackathon
 
-# Create and activate a virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Install all required libraries
-
 pip install -r requirements.txt
-Authentication:
-Authenticate with Google Cloud to use the Vertex AI API. This will open a browser window for you to log in.
+```
+
+#### 🔐 Authenticate with Google Cloud
+
+```bash
 gcloud auth application-default login
+```
 
-2. Prepare Models & Data
-Place the provided video files in the /videos directory.
-Place product_data.xlsx, images.csv, and vibes_list.json in the /data directory.
-Download the pre-trained best.pt model from the Kaggle link provided and place it in the /models directory.
-Run the data preparation and index-building notebooks (01_... to 04b_...) or provide the final FAISS index (catalog_index_large.faiss and product_id_map_large.json) in the /models folder.
+---
 
-(Optional but Recommended) Run the scripts/download_model.py script to pre-cache all Hugging Face models locally.
+### 📁 2. Prepare Models & Data
 
-4. Execute the Full Pipeline
-The workflow consists of running the three main scripts in sequence for each video. The scripts are designed to find and process the outputs from the previous step.
+* Drop **videos** into: `/videos`
+* Place:
 
-Step 1: Generate Candidates
-This script will process all videos in the /videos folder and create initial candidate JSON files in /outputs.
+  * `product_data.xlsx`
+  * `images.csv`
+  * `vibes_list.json`
+    into: `/data`
+* Download `best.pt` from the provided Kaggle link → place in `/models`
+* Run notebooks `01_...` to `04b_...` or place:
+
+  * `catalog_index_large.faiss`
+  * `product_id_map_large.json`
+    into `/models`
+* *(Optional)* Run:
+
+```bash
+python scripts/download_model.py
+```
+
+To cache all Hugging Face models locally.
+
+---
+
+### ▶️ 3. Execute the Full Pipeline
+
+#### 🌀 Step 1: Generate Candidates
+
+```bash
 python3 scripts/run_advanced_pipeline.py
+```
 
-Step 2: Re-rank with Gemini Vision
-This script will process all candidate files in /outputs and create re-ranked files in /outputs_reranked.
+Creates JSON outputs in `/outputs`.
 
+---
+
+#### 🔁 Step 2: Re-rank Using Gemini
+
+```bash
 python3 scripts/vertex_visual_rerank.py
-(Note: You will need to edit the script to loop through all files, or run it manually for each one by changing the INPUT_JSON_FILE variable).
+```
 
-Step 3: Add Vibe Information
-This final script processes files in /outputs_reranked to produce the final, complete JSON files in /outputs_final.
+> ⚠️ Script currently processes one file.
+> Edit `INPUT_JSON_FILE` or loop through `/outputs`.
 
+---
+
+#### 🌈 Step 3: Add Vibe Information
+
+```bash
 python3 scripts/add_vibes.py
-(Note: This script will also need to be modified to loop through all re-ranked files).
+```
 
-Conclusion
-This project successfully demonstrates an advanced, multi-modal pipeline for fashion product recognition. By evolving from a simple visual search to a sophisticated system with relevance filtering and LLM-based re-ranking, we were able to achieve highly accurate and context-aware results, overcoming the challenges of real-world video data and visual ambiguity in a large catalog.
+> ⚠️ Also designed for single-file processing.
+> Modify to loop through `/outputs_reranked`.
+
+---
+
+## 🏁 Final Thoughts
+
+This project demonstrates a **cutting-edge, multi-stage AI pipeline** for fashion video understanding — merging:
+
+* 🖼️ **Computer Vision**
+* 🧾 **Captioning**
+* 🔍 **Semantic Search**
+* 💬 **Multimodal LLM Reasoning**
+
+By combining smart filtering, hybrid matching, and LLM judgement, we accurately detect fashion products *and* assign them an expressive, style-aware **vibe**.
+
+---
+
+## 💡 Technologies Used
+
+* **YOLOv8n** — Frame Filtering
+* **CLIP (ViT-L/14)** — Visual Embeddings
+* **BLIP** — Image Captioning
+* **Sentence Transformers** — Text Similarity
+* **Gemini Pro Vision (Vertex AI)** — Multimodal Reasoning
+* **FAISS** — Fast Product Retrieval
+
+---
+
+## 📂 Project Structure
+
+```
+📁 /scripts
+ ├─ run_advanced_pipeline.py
+ ├─ vertex_visual_rerank.py
+ └─ add_vibes.py
+📁 /models
+📁 /data
+📁 /videos
+📁 /outputs
+📁 /outputs_reranked
+📁 /outputs_final
+```
+
+---
+
+## 🧠 Team & Credits
+
+Made with ❤️ for the Flickd AI Hackathon
+By [Ravinder](https://github.com/Ravinder210)
+
+
